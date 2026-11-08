@@ -78,7 +78,7 @@ you open an app. On Fire OS 7 and 8 the Settings button opens Amazon's settings 
 | Child lock | off, on: hides Options and Settings and turns off Hold OK and ☰ Menu on tiles, so the home screen only opens apps and inputs (see below) |
 | App tile style | original (default), Afterglow: uppercase names inside the tile, a brand-color fade into black, a grayscale installed app icon in the corner, and a thin focus border |
 | Library banner | shown (default), hidden. It only appears once a library folder holds titles (see below) |
-| Home to return to | Fire TV only: automatic (default), Aerial TV, CleanYourTV, `home_target_custom`, or dumbtv home. Which launcher the takeover keeps on top ([Keeping another launcher on top](../docs/OTHER-LAUNCHERS.md)) |
+| Home to return to | Fire TV only: automatic (default), Aerial TV, CleanYourTV, or Dumbtv Home. Which launcher the takeover keeps on top ([Keeping another launcher on top](../docs/OTHER-LAUNCHERS.md)) |
 | Icon pack | off, or an installed icon pack; reads "None installed" until one is ([Icon packs](#icon-packs)) |
 
 Below them: Next wallpaper, which apps and inputs appear on the home screen, a
@@ -223,10 +223,8 @@ rotate=off
 lock=off
 # off, or an installed icon pack's package
 icon_pack=off
-# auto aerial gathin custom dumbtv (Fire TV only: which launcher HOME returns to)
+# auto aerial gathin dumbtv (Fire TV only: which launcher HOME returns to)
 home_target=auto
-# package/activity, used when home_target=custom
-home_target_custom=app.orchard.tv/app.orchard.tv.MainActivity
 icon.com.stremio.one=com.example.iconpack/stremio
 apps.order=com.amazon.firetv.youtube,org.videolan.vlc
 apps.hide=org.videolan.vlc

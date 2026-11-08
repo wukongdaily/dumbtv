@@ -42,8 +42,10 @@ Options has one row, **Home to return to**, and the same value is a line in
 | `auto` (default) | Aerial if it is installed, else cleanyourtv's launcher if it is, else dumbtv home |
 | `aerial` | Aerial TV (`app.orchard.tv/.MainActivity`) — animated wallpapers, heavier |
 | `gathin` | cleanyourtv's launcher (`com.gathin.tvhome/.MainActivity`) — plain, light |
-| `custom` | whatever `home_target_custom` names, as `package/activity` |
 | `dumbtv` | dumbtv home itself: the behaviour this repository ships |
+
+A third launcher is not a setting: it is one more preset in `Target` and one more value in
+`Config.HOME_TARGET`, which is a rebuild rather than a line for the owner to get right over adb.
 
 A hand edit is picked up at the next bounce, with no reboot and no restart of the app:
 
@@ -77,7 +79,6 @@ keeps dumbtv home on top, so a typo cannot put the two into a fight.
   here: [wukongdaily/cleanyourtv](https://github.com/wukongdaily/cleanyourtv/tree/android-71-launcher-build),
   with [its own notes](https://github.com/wukongdaily/cleanyourtv/blob/android-71-launcher-build/docs/android-71.md)
   (the APK grows to about 700 KB, so upstream's size gate fails it on purpose).
-- **Anything else**, through `home_target_custom`: name the activity HOME should land on.
 
 One takeover engine at a time. If the other launcher also runs an accessibility or watchdog
 takeover, turn that one off, or the two will trade the front.
@@ -93,7 +94,7 @@ keeper: moveToFront (for ComponentInfo{app.orchard.tv/app.orchard.tv.MainActivit
 home: handed front to ComponentInfo{app.orchard.tv/app.orchard.tv.MainActivity}
 keeper: alarm set (home trampoline, for ComponentInfo{...})   # no own task yet, e.g. after boot
 keeper: moveToFront                                           # home_target=dumbtv
-home_target_custom wants package/activity, got ""             # bad line; dumbtv home stays
+target app.orchard.tv is not installed; keeping dumbtv home    # a hand edit that points at nothing
 ```
 
 `Keeper` is not exported, so `adb shell am startservice tv.dumbtv.home/.Keeper` is refused.

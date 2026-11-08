@@ -144,6 +144,5 @@
     <string name="choice_home_target_auto">Automatic</string>
     <string name="choice_home_target_aerial">Aerial TV</string>
     <string name="choice_home_target_gathin">CleanYourTV</string>
-    <string name="choice_home_target_custom">home_target_custom</string>
-    <string name="choice_home_target_dumbtv">dumbtv home</string>
+    <string name="choice_home_target_dumbtv">Dumbtv Home</string>
 </resources>

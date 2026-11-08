@@ -118,11 +118,8 @@ final class Config {
      * Fire TV, where Amazon's protected launcher fights for the HOME key.
      */
     static final Choice HOME_TARGET = new Choice("home_target", "Home to return to", "auto",
-            new String[] {"auto", "aerial", "gathin", "custom", "dumbtv"},
-            new String[] {"Automatic", "Aerial TV", "CleanYourTV", "From home_target_custom",
-                    "dumbtv home"});
-    /** {@code package/activity} used when {@link #HOME_TARGET} is {@code custom}. */
-    static final String HOME_TARGET_CUSTOM = "home_target_custom";
+            new String[] {"auto", "aerial", "gathin", "dumbtv"},
+            new String[] {"Automatic", "Aerial TV", "CleanYourTV", "Dumbtv Home"});
     static final Choice[] CHOICES = {ACCENT, TILES, LAYOUT, ORDER, ALL_APPS, LABELS, CLOCK, MEMORY, INPUTS, SWITCH, BACKGROUND, DIM, ROTATE, LOCK, TILE_STYLE, LIBRARY, HOME_TARGET};
 
     /** Folder of wallpapers, next to home.conf, that Background › Image file rotates through. */

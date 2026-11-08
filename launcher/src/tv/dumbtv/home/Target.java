@@ -12,12 +12,13 @@ import android.content.pm.PackageManager;
  * <ul>
  *   <li>{@code home_target=aerial} — Aerial TV, animated wallpapers, heavier</li>
  *   <li>{@code home_target=gathin} — cleanyourtv's launcher, plain and light</li>
- *   <li>{@code home_target=custom} — any launcher named in {@code home_target_custom} as
- *       {@code package/activity} (FLauncher, Projectivy, …)</li>
  *   <li>{@code home_target=dumbtv} — this app's own home, i.e. upstream behaviour</li>
  *   <li>{@code home_target=auto} (default) — Aerial when it is installed, else CleanYourTV
  *       when it is, else this app's own home</li>
  * </ul>
+ *
+ * <p>Two homes is the whole feature: a third launcher is a preset here and one more value in
+ * {@link Config#HOME_TARGET}, not a setting for the owner to work out over adb.
  *
  * <p>Why a trampoline: {@code ActivityManager.getAppTasks()} only ever returns this process's
  * own tasks, so {@code moveTaskToFront} cannot raise another app's task, and starting another
@@ -67,15 +68,6 @@ final class Target {
         } else if ("gathin".equals(want)) {
             pkg = GATHIN;
             act = GATHIN_HOME;
-        } else if ("custom".equals(want)) {
-            String raw = cfg.get(Config.HOME_TARGET_CUSTOM, "");
-            int slash = raw.indexOf('/');
-            if (slash <= 0 || slash == raw.length() - 1) {
-                Keeper.note("home_target_custom wants package/activity, got \"" + raw + "\"");
-                return null;
-            }
-            pkg = raw.substring(0, slash);
-            act = raw.substring(slash + 1);
         } else if ("auto".equals(want)) {
             if (installed(c, AERIAL)) {
                 pkg = AERIAL;

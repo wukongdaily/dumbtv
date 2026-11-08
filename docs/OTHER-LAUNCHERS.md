@@ -67,10 +67,16 @@ keeps dumbtv home on top, so a typo cannot put the two into a fight.
   Its settings button needs a build with a Fire TV branch in its settings lookup: plain
   `android.settings.SETTINGS` resolves to a compliance stub
   (`com.amazon.tv.settings.v2/.compliance.CTSDummySettingsHandler`) that closes as it opens.
-- **cleanyourtv's launcher.** The upstream APK is built `minSdk 26`, so on Fire OS 6 it
-  needs a rebuild at API 25 with core-library desugaring (it uses `java.time`), a version
-  check around `PackageManager.getChangedPackages`, and `ResourcesCompat.getFont` in place
-  of `Resources.getFont` (API 26) — without the last one, opening its app library kills it.
+- **cleanyourtv's launcher.** The upstream APK is built `minSdk 26`, so on Fire OS 6 it needs a rebuild at
+  API 25: core-library desugaring for the `java.time` the lunar row uses, plus version branches around the
+  five calls newer than the floor — `PackageManager.getChangedPackages`, `Resources.getFont` (without this
+  one, opening its app library kills the launcher), `Files.readAllLines(file.toPath())`, and the
+  `Bitmap.Config.HARDWARE` field, whose `NoSuchFieldError` the surrounding `catch (Exception ...)` does not
+  hold. The last two are what `lintRelease` reports once the floor drops, so run it rather than trusting a
+  smoke test: the launcher boots and draws fine with all of them still in place. That build is published
+  here: [wukongdaily/cleanyourtv](https://github.com/wukongdaily/cleanyourtv/tree/android-71-launcher-build),
+  with [its own notes](https://github.com/wukongdaily/cleanyourtv/blob/android-71-launcher-build/docs/android-71.md)
+  (the APK grows to about 700 KB, so upstream's size gate fails it on purpose).
 - **Anything else**, through `home_target_custom`: name the activity HOME should land on.
 
 One takeover engine at a time. If the other launcher also runs an accessibility or watchdog

@@ -140,4 +140,10 @@
     <string name="choice_library">Library banner</string>
     <string name="choice_library_on">Shown</string>
     <string name="choice_library_off">Hidden</string>
+    <string name="choice_home_target">Home to return to</string>
+    <string name="choice_home_target_auto">Automatic</string>
+    <string name="choice_home_target_aerial">Aerial TV</string>
+    <string name="choice_home_target_gathin">CleanYourTV</string>
+    <string name="choice_home_target_custom">home_target_custom</string>
+    <string name="choice_home_target_dumbtv">dumbtv home</string>
 </resources>

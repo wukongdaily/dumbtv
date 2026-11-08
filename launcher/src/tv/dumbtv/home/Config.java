@@ -113,7 +113,17 @@ final class Config {
     /** The banner of hand-picked titles from {@link Library}; hidden anyway while it has none. */
     static final Choice LIBRARY = new Choice("library", "Library banner", "on",
             new String[] {"on", "off"}, new String[] {"Shown", "Hidden"});
-    static final Choice[] CHOICES = {ACCENT, TILES, LAYOUT, ORDER, ALL_APPS, LABELS, CLOCK, MEMORY, INPUTS, SWITCH, BACKGROUND, DIM, ROTATE, LOCK, TILE_STYLE, LIBRARY};
+    /**
+     * Which launcher the Fire TV bounce keeps on top; see {@link Target}. Only meaningful on a
+     * Fire TV, where Amazon's protected launcher fights for the HOME key.
+     */
+    static final Choice HOME_TARGET = new Choice("home_target", "Home to return to", "auto",
+            new String[] {"auto", "aerial", "gathin", "custom", "dumbtv"},
+            new String[] {"Automatic", "Aerial TV", "CleanYourTV", "From home_target_custom",
+                    "dumbtv home"});
+    /** {@code package/activity} used when {@link #HOME_TARGET} is {@code custom}. */
+    static final String HOME_TARGET_CUSTOM = "home_target_custom";
+    static final Choice[] CHOICES = {ACCENT, TILES, LAYOUT, ORDER, ALL_APPS, LABELS, CLOCK, MEMORY, INPUTS, SWITCH, BACKGROUND, DIM, ROTATE, LOCK, TILE_STYLE, LIBRARY, HOME_TARGET};
 
     /** Folder of wallpapers, next to home.conf, that Background › Image file rotates through. */
     static final String WALLPAPERS = "wallpapers";

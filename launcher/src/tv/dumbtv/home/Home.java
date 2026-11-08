@@ -310,6 +310,20 @@ public final class Home extends Activity {
     protected void onResume() {
         super.onResume();
         resumed = true;
+        // The Keeper (or Guard) just bounced us to the front; hand the front to the launcher the
+        // owner chose. A foreground activity may start another app without the 5 s app-switch
+        // delay Fire OS applies after HOME. Nothing happens when the target is dumbtv home itself.
+        if (Target.consume()) {
+            Intent target = Target.resolve(this);
+            if (target != null) {
+                try {
+                    startActivity(target);
+                    Keeper.note("home: handed front to " + target.getComponent());
+                } catch (Throwable t) {
+                    Keeper.note("target start threw: " + t);
+                }
+            }
+        }
         Guard.arrived(this);
         Filter.wake(this);
         cfg.refresh();

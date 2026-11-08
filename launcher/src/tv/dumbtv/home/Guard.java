@@ -78,6 +78,9 @@ public final class Guard extends AccessibilityService {
     }
 
     private static void home(Context c, long delayMs) {
+        // Same trampoline as the Keeper: Home hands the front to the launcher the owner chose,
+        // because this launch is only exempt from the app-switch delay for our own activity.
+        if (Target.resolve(c) != null) Target.arm();
         AlarmManager alarms = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
         alarms.setExact(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + delayMs,
                 launch(c));

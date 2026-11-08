@@ -14,13 +14,16 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 
 /**
- * Watches for Amazon's launcher coming back to the foreground and puts dumbtv home back on top.
+ * Watches for Amazon's launcher coming back to the foreground and puts the chosen home back on top.
  *
  * Fire OS 6.7 refuses third-party accessibility services, so Guard cannot run there. This service
  * needs no accessibility: it reads the foreground package from UsageStats (granted with
  * `appops set tv.dumbtv.home GET_USAGE_STATS allow`) and calls moveTaskToFront, which is not an
- * activity launch and therefore escapes the 5 s app-switch delay. The alarm path is only the
- * first-start fallback, before a Home task exists.
+ * activity launch and therefore escapes the 5 s app-switch delay. The alarm path is the fallback
+ * for when Fire OS has already torn this app's Home task down, which it does after a HOME press.
+ *
+ * The launcher to keep on top is {@link Target}: this app's own home by default, or another one
+ * (Aerial, cleanyourtv's launcher, …) through Home as a trampoline.
  */
 public final class Keeper extends Service {
     private static final String AMAZON_PKG = "com.amazon.tv.launcher";
@@ -147,6 +150,9 @@ public final class Keeper extends Service {
 
     private void launch(long now) {
         lastLaunch = now;
+        // null means dumbtv home itself should stay on top, which is what it always did.
+        Intent target = Target.resolve(this);
+        if (target != null) Target.arm();
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         if (manager != null) {
             try {
@@ -159,8 +165,11 @@ public final class Keeper extends Service {
                     String base = task.getTaskInfo().baseActivity == null ? ""
                             : task.getTaskInfo().baseActivity.getClassName();
                     if (top.isEmpty() && base.isEmpty()) continue;
+                    // Raising our own Home is not an activity launch, so there is no 5 s delay.
+                    // When another launcher owns the front, Home passes it on from onResume.
                     task.moveToFront();
-                    android.util.Log.i("dumbtvtest", "keeper: moveToFront");
+                    android.util.Log.i("dumbtvtest", "keeper: moveToFront"
+                            + (target == null ? "" : " (for " + target.getComponent() + ")"));
                     return;
                 }
             } catch (Throwable t) {
@@ -168,14 +177,18 @@ public final class Keeper extends Service {
                 // Fall through to the alarm below.
             }
         }
+        // No own task to raise (Fire OS tears the Home task down after a HOME press, so this is
+        // the common case, not just boot). The alarm fires from system_server, which is exempt
+        // from the 5 s app-switch window -- but only for a start of *this* app. Starting the
+        // other launcher directly here would sit through the whole delay, so the alarm starts
+        // Home and Home hands the front over.
         Intent i = new Intent(this, Home.class)
-                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                        | Intent.FLAG_ACTIVITY_CLEAR_TOP
-                        | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent pi = PendingIntent.getActivity(this, 1, i, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         am.setExact(AlarmManager.RTC, now, pi);
-        android.util.Log.i("dumbtvtest", "keeper: alarm set");
+        android.util.Log.i("dumbtvtest", "keeper: alarm set (home trampoline"
+                + (target == null ? ", no target" : ", for " + target.getComponent()) + ")");
     }
 
     @Override
